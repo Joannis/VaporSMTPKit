@@ -6,7 +6,7 @@ Add this library to `Package.swift`
 .package(url: "https://github.com/autimatisering/VaporSMTPKit.git", from: "0.1.0")
 ```
 
-## Usage
+## Setup
 
 ```swift
 import VaporSMTPKit
@@ -21,8 +21,12 @@ extension SMTPCredentials {
         )
     }
 }
+```
 
-app.get { request in
+### Sending a Mail
+
+```swift
+app.get { request -> EventLoopFuture<String> in
     let email = Mail(
         from: "noreply@example.com",
         to: [
@@ -33,6 +37,8 @@ app.get { request in
         text: "You've set up mail!"
     )
     
-    return request.app.sendMail(email, withCredentials: .default)
+    return request.app.sendMail(email, withCredentials: .default).map { 
+        retunr "Check your mail!"
+    }
 }
 ```
