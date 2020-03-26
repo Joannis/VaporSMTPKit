@@ -1,4 +1,4 @@
-# Vapor + SMTP
+# Vapor 4 + SMTP
 
 Add this library to `Package.swift`
 
