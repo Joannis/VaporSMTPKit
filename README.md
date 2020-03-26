@@ -6,6 +6,13 @@ Add this library to `Package.swift`
 .package(url: "https://github.com/autimatisering/VaporSMTPKit.git", from: "0.1.0")
 ```
 
+Add the target `"VaporSMTPKit"` to your own target's dependencies.
+In Swift 5.2 manifests, this looks like the following:
+
+```swift
+.product(name: "VaporSMTPKit", package: "VaporSMTPKit"),
+```
+
 ## Setup
 
 ```swift
