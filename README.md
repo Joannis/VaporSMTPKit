@@ -44,8 +44,8 @@ app.get { request -> EventLoopFuture<String> in
         text: "You've set up mail!"
     )
     
-    return request.app.sendMail(email, withCredentials: .default).map { 
-        retunr "Check your mail!"
+    return request.application.sendMail(email, withCredentials: .default).map { 
+        return "Check your mail!"
     }
 }
 ```
