@@ -42,6 +42,7 @@ extension Application {
         
         return SMTPClient.connect(
             hostname: credentials.hostname,
+            port: credentials.port,
             ssl: credentials.ssl
         ).flatMap { client in
             client.login(
@@ -57,17 +58,20 @@ extension Application {
 
 public struct SMTPCredentials {
     let hostname: String
+    let port: Int
     let email: String
     let ssl: SMTPSSLMode
     let password: String
     
     public init(
         hostname: String,
+        port: Int = 587,
         ssl: SMTPSSLMode,
         email: String,
         password: String
     ) {
         self.hostname = hostname
+        self.port = port
         self.ssl = ssl
         self.email = email
         self.password = password
