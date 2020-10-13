@@ -44,7 +44,7 @@ extension Application {
             hostname: credentials.hostname,
             port: credentials.port,
             ssl: credentials.ssl,
-            eventLoop: self.eventLoop
+            eventLoop: self.eventLoopGroup.next()
         ).flatMap { client in
             client.login(
                 user: credentials.email,
