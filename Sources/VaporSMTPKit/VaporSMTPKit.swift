@@ -43,7 +43,8 @@ extension Application {
         return SMTPClient.connect(
             hostname: credentials.hostname,
             port: credentials.port,
-            ssl: credentials.ssl
+            ssl: credentials.ssl,
+            eventLoop: self.eventLoop
         ).flatMap { client in
             client.login(
                 user: credentials.email,
