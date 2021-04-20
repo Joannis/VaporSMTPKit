@@ -32,7 +32,7 @@ extension Application {
             mail.cc = mail.cc.filter(filterMailAddress)
             mail.bcc = mail.bcc.filter(filterMailAddress)
             
-            if mail.to.isEmpty {
+            if mail.to.isEmpty && mail.cc.isEmpty && mail.bcc.isEmpty {
                 return nil
             }
             
