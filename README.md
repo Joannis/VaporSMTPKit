@@ -33,9 +33,11 @@ extension SMTPCredentials {
 ### Sending a Mail
 
 ```swift
+import SMTPKitten
+
 app.get { request -> EventLoopFuture<String> in
     let email = Mail(
-        from: "noreply@example.com",
+        from: MailUser(name: "Noreply", email: "noreply@example.com"),
         to: [
             MailUser(name: "Myself", email: "me@example.com")
         ],
