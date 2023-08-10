@@ -17,6 +17,7 @@ In Swift 5.2 manifests, this looks like the following:
 
 ```swift
 import VaporSMTPKit
+import SMTPKitten
 
 extension SMTPCredentials {
     static var `default`: SMTPCredentials {
