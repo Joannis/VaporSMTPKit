@@ -2,19 +2,20 @@ import Vapor
 import SMTPKitten
 
 extension Application {
+    
     public func sendMail(
         _ mail: Mail,
         withCredentials credentials: SMTPCredentials,
         preventedDomains: Set<String> = ["example.com"]
-    ) -> EventLoopFuture<Void> {
-        return sendMails([mail], withCredentials: credentials, preventedDomains: preventedDomains)
+    ) async throws {
+        try await sendMails([mail], withCredentials: credentials, preventedDomains: preventedDomains)
     }
     
     public func sendMails(
         _ mails: [Mail],
         withCredentials credentials: SMTPCredentials,
         preventedDomains: Set<String> = ["example.com"]
-    ) -> EventLoopFuture<Void> {
+    ) async throws {
         func filterMailAddress(_ address: MailUser) -> Bool {
             for domain in preventedDomains {
                 if address.email.contains(domain) {
@@ -25,7 +26,7 @@ extension Application {
             return true
         }
         
-        let mails = mails.compactMap { mail -> Mail? in
+        let filteredMails = mails.compactMap { mail -> Mail? in
             var mail = mail
             
             mail.to = mail.to.filter(filterMailAddress)
@@ -39,21 +40,26 @@ extension Application {
             return mail
         }
         
-        
-        return SMTPClient.connect(
+        let client = try await SMTPClient.connect(
             hostname: credentials.hostname,
             port: credentials.port,
-            ssl: credentials.ssl,
-            eventLoop: self.eventLoopGroup.next()
-        ).flatMap { client in
-            client.login(
-                user: credentials.email,
-                password: credentials.password
-            ).flatMap {
-                let sent = mails.map(client.sendMail)
-                return EventLoopFuture.andAllSucceed(sent, on: self.eventLoopGroup.next())
+            ssl: credentials.ssl
+        )
+        
+        try await client.login(
+            user: credentials.email,
+            password: credentials.password
+        )
+        
+        let sent: () = await withThrowingTaskGroup(of: Void.self) { group in
+            for mail in filteredMails {
+                group.addTask {
+                    try await client.sendMail(mail)
+                }
             }
         }
+        
+        _ = sent
     }
 }
 
